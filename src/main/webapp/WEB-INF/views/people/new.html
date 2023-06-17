@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление нового посетителя</title>
+</head>
+<body>
+  <form th:method="POST" th:action="@{/people}" th:object="${person}">
+    <label for="surname">Введите фамилию: </label>
+    <input type="text" th:field="*{surname}" id="surname">
+    <div style="color:red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Name error</div>
+    <br>
+
+    <label for="name">Введите имя: </label>
+    <input type="text" th:field="*{name}" id="name">
+    <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+    <br>
+
+    <label for="patronymic">Введите отчество: </label>
+    <input type="text" th:field="*{patronymic}" id="patronymic">
+    <div style="color:red" th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}">Name error</div>
+    <br>
+
+    <label for="yearOfBirthday">Введите год рождения: </label>
+    <input type="text" th:field="*{yearOfBirthday}" id="yearOfBirthday">
+    <div style="color:red" th:if="${#fields.hasErrors('yearOfBirthday')}" th:errors="*{yearOfBirthday}">Name error</div>
+    <br>
+
+    <input type="submit" value="Добавить!"/>
+  </form>
+
+
+</body>
+</html>
