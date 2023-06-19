@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class BookDAO {
@@ -24,6 +25,7 @@ public class BookDAO {
     public Book showBook(int id) {
         return jdbcTemplate.query("SELECT * FROM Book WHERE book_id=?",
                 new Object[]{id}, new BookMapper()).stream().findAny().orElse(null);
+
     }
 
     public void save(Book book) {
@@ -38,5 +40,24 @@ public class BookDAO {
 
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM Book WHERE book_id=?", id);
+    }
+
+    public void addOwner(int book_id,int person_id) {
+        jdbcTemplate.update("UPDATE Book SET person_id=? WHERE book_id=?",
+                person_id, book_id);
+    }
+
+    public boolean isFree(int book_id) {
+        return showBook(book_id).getPerson_id() == 0;
+    }
+
+    public Person showOwner(int book_id) {
+        return jdbcTemplate.query("SELECT * FROM Person WHERE id=(SELECT person_id FROM Book WHERE book_id=?)",
+                new Object[]{book_id}, new PersonMapper()).stream().findAny().orElse(null);
+    }
+
+    public void getBookFree(int book_id) {
+        jdbcTemplate.update("UPDATE Book SET person_id=null WHERE book_id=?",
+               book_id);
     }
 }

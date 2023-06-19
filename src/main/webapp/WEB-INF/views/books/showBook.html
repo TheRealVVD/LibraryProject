@@ -6,14 +6,63 @@
 </head>
 <body>
     <p th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYearOfProduction()}"></p>
-
+    <form th:method="POST" th:action="@{/books/{id}/add(id=${book.getBook_id()})}" th:if="${isBookFree}">
+        <p>Эта книга свободна!</p>
+        <label for="person">Выберите человека: </label>
+            <select th:object="${person}" th:field="*{id}" id="person"> <!-- здесь person тот, что мы передали в аннотации ModelAttribute для заполнения данных из формы -->
+            <!-- th:field="$*{id}" отвечает за то, какое поле будет содержаться в th:value (мы туда добавляем id  - person.getId())-->
+                <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getFullName}"> <!-- здесь person как один из тех, что выпадают из списка -->
+                <!-- th:value="${person.getId()}" - значение, которое будет отправляться на сервер -->
+                </option>
+            </select>
+        <input type="submit" value="Назначить книгу" style="
+                margin-top: 10px;
+                background-color: white;
+                width: 125px;
+                height: 25px;
+                border: none;
+                box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                border-radius: 10px;
+                ">
+    </form>
+    <form th:method="POST" th:action="@{/books/{id}/get_free(id=${book.getBook_id()})}" th:object="${book}" th:unless="${isBookFree}">
+        <p th:text="'Книга сейчас у: ' + ${ownerPerson.getFullName()}"> value </p>
+        <input type="submit" value="Освободить книгу"
+               style="
+                margin-top: 10px;
+                background-color: white;
+                width: 125px;
+                height: 25px;
+                border: none;
+                box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                border-radius: 10px;
+                ">
+    </form>
     <br/>
     <hr/>
     <form th:method="GET" th:action="@{/books/{id}/edit(id=${book.getBook_id()})}">
-        <input type="submit" value="Изменить"/>
+        <input type="submit" value="Изменить"
+               style="
+                margin-top: 10px;
+                background-color: white;
+                width: 100px;
+                height: 25px;
+                border: none;
+                box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                border-radius: 10px;
+                "
+        />
     </form>
     <form th:method="DELETE" th:action="@{/books/{id}(id=${book.getBook_id()})}">
-        <input type="submit" value="Удалить"/>
+        <input type="submit" value="Удалить" style="
+                margin-top: 10px;
+                background-color: white;
+                width: 100px;
+                height: 25px;
+                border: none;
+                box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                border-radius: 10px;
+                "/>
     </form>
 </body>
 </html>

@@ -17,10 +17,12 @@ import javax.validation.Valid;
 public class BookController {
 
     private final BookDAO bookDAO;
+    private final PersonDAO personDAO;
 
     @Autowired
-    public BookController(BookDAO bookDAO) {
+    public BookController(BookDAO bookDAO, PersonDAO personDAO) {
         this.bookDAO = bookDAO;
+        this.personDAO = personDAO;
     }
 
     @GetMapping()
@@ -30,8 +32,12 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public String showBook(@PathVariable("id") int id, Model model) {
+    public String showBook(@PathVariable("id") int id, Model model,
+                           @ModelAttribute("person") Person person) {
         model.addAttribute("book", bookDAO.showBook(id));
+        model.addAttribute("people", personDAO.showAll());
+        model.addAttribute("isBookFree", bookDAO.isFree(id));
+        model.addAttribute("ownerPerson", bookDAO.showOwner(id));
         return "books/showBook";
     }
 
@@ -74,4 +80,19 @@ public class BookController {
         bookDAO.delete(id);
         return "redirect:/books";
     }
+
+    @PostMapping("/{id}/add")
+    public String bookOwner(@PathVariable("id") int book_id,
+                            @ModelAttribute("person") Person person) {
+        bookDAO.addOwner(book_id, person.getId());
+        return "redirect:/books/{id}";
+    }
+
+    @PostMapping("/{id}/get_free")
+    public String getBookFree(@PathVariable("id") int book_id,
+                              @ModelAttribute("person") Person person) {
+        bookDAO.getBookFree(book_id);
+        return "redirect:/books/{id}";
+    }
+
 }

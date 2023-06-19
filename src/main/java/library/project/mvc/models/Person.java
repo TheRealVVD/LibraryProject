@@ -1,10 +1,22 @@
 package library.project.mvc.models;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Value;
+
+import javax.validation.constraints.Size;
+
 public class Person {
     private int id;
+    @NotEmpty(message = "Поле имени не должно быть пустым")
+    @Size(min = 2, max = 50, message = "Поле имени должно быть длинной больше 1 и меньше 51 символов")
     private String name;
+    @NotEmpty(message = "Поле фамилии не должно быть пустым")
+    @Size(min = 2, max = 50, message = "Поле фамилии должно быть длинной больше 1 и меньше 51 символов")
     private String surname;
+    @NotEmpty(message = "Поле отчества не должно быть пустым")
+    @Size(min = 2, max = 50, message = "Поле отчества должно быть длинной больше 1 и меньше 51 символов")
     private String patronymic;
+    @NotEmpty(message = "Заполните поле возраста")
     private int yearOfBirthday;
 
     public Person() {
@@ -56,5 +68,9 @@ public class Person {
 
     public void setYearOfBirthday(int yearOfBirthday) {
         this.yearOfBirthday = yearOfBirthday;
+    }
+
+    public String getFullName() {
+        return surname + " " + name + " " + patronymic;
     }
 }

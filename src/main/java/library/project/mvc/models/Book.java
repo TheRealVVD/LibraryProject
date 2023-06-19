@@ -1,10 +1,19 @@
 package library.project.mvc.models;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Size;
+
 public class Book {
     private int book_id;
     private int person_id;
+    @NotEmpty(message = "Поле названия книги не должно быть пустым")
+    @Size(min = 2, max = 50, message = "Поле названия книги должно быть длинной больше 1 и меньше 51 символов")
     private String name;
+    @NotEmpty(message = "Поле имени автора не должно быть пустым")
+    @Size(min = 2, max = 50, message = "Поле имени автора должно быть длинной больше 1 и меньше 51 символов")
     private String author;
+    @NotEmpty(message = "Заполните поле даты издания")
     private int yearOfProduction;
 
     public Book() {
