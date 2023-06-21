@@ -8,13 +8,51 @@
 <!--    <p th:text="${person.getSurname() + ' ' + person.getName() + ' ' + person.getPatronymic() + ', ' + person.getYearOfBirthday()}"> VALUE </p>-->
     <p th:text="${person.getSurname()} + ' ' + ${person.getName()} + ' ' + ${person.getPatronymic()} + ', ' + ${person.getYearOfBirthday()}"> VALUE </p>
 <!--  Оба варианта строки выше - рабочие -->
+
+    <form th:method="GET" th:action="@{/books}" th:unless="${hasABook}">
+    <p> Человек пока не взял ни одной книги </p>
+    <input type="submit" value="Взять книгу"
+           style="
+                margin-top: 10px;
+                background-color: white;
+                width: 125px;
+                height: 25px;
+                border: none;
+                box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                border-radius: 10px;
+                ">
+    </form>
+    <div th:if="${hasABook}">
+        <hr/>
+    <p><b>Взял книги: </b></p>
+        <div th:each="book : ${personsBook}">
+            <p th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYearOfProduction()}"></p>
+    </div>
     <br/>
     <hr/>
     <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
-        <input type="submit" value="Изменить"/>
+        <input type="submit" value="Изменить"
+               style="
+                margin-top: 10px;
+                background-color: white;
+                width: 125px;
+                height: 25px;
+                border: none;
+                box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                border-radius: 10px;
+                "/>
     </form>
     <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
-        <input type="submit" value="Удалить"/>
+        <input type="submit" value="Удалить"
+               style="
+                margin-top: 10px;
+                background-color: white;
+                width: 125px;
+                height: 25px;
+                border: none;
+                box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                border-radius: 10px;
+                "/>
     </form>
 </body>
 </html>

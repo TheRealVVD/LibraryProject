@@ -1,5 +1,6 @@
 package library.project.mvc.controllers;
 
+import library.project.mvc.dao.BookDAO;
 import library.project.mvc.dao.PersonDAO;
 import library.project.mvc.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import javax.validation.Valid;
 public class PeopleController {
 
     private final PersonDAO personDAO;
+    private final BookDAO bookDAO;
 
     @Autowired
-    public PeopleController(PersonDAO personDAO) {
+    public PeopleController(PersonDAO personDAO, BookDAO bookDAO) {
         this.personDAO = personDAO;
+        this.bookDAO = bookDAO;
     }
 
     @GetMapping
@@ -30,6 +33,8 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String showPerson(@PathVariable("id") int id, Model model) {
         model.addAttribute("person", personDAO.showPerson(id));
+        model.addAttribute("personsBook", personDAO.booksForPerson(id));
+        model.addAttribute("hasABook", personDAO.hasABook(personDAO.booksForPerson(id)));
         return "people/showPerson";
     }
 

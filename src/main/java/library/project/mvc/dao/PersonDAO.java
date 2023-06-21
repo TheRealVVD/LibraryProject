@@ -1,5 +1,6 @@
 package library.project.mvc.dao;
 
+import library.project.mvc.models.Book;
 import library.project.mvc.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -12,10 +13,12 @@ import java.util.List;
 public class PersonDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final BookDAO bookDAO;
 
     @Autowired
-    public PersonDAO (JdbcTemplate jdbcTemplate) {
+    public PersonDAO (JdbcTemplate jdbcTemplate, BookDAO bookDAO) {
         this.jdbcTemplate=jdbcTemplate;
+        this.bookDAO=bookDAO;
     }
 
     public List<Person> showAll() {
@@ -39,5 +42,14 @@ public class PersonDAO {
 
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM Person WHERE id=?", id);
+    }
+
+    public List<Book> booksForPerson(int person_id) {
+        return jdbcTemplate.query("SELECT * FROM Book WHERE person_id=?",
+                new Object[]{person_id}, new BookMapper());
+    }
+
+    public boolean hasABook(List list) {
+        return list.size() > 0;
     }
 }
