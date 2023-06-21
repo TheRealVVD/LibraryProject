@@ -13,7 +13,7 @@ public class Book {
     @NotEmpty(message = "Поле имени автора не должно быть пустым")
     @Size(min = 2, max = 50, message = "Поле имени автора должно быть длинной больше 1 и меньше 51 символов")
     private String author;
-    @NotEmpty(message = "Заполните поле даты издания")
+
     private int yearOfProduction;
 
     public Book() {

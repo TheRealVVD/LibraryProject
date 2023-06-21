@@ -16,7 +16,6 @@ public class Person {
     @NotEmpty(message = "Поле отчества не должно быть пустым")
     @Size(min = 2, max = 50, message = "Поле отчества должно быть длинной больше 1 и меньше 51 символов")
     private String patronymic;
-    @NotEmpty(message = "Заполните поле возраста")
     private int yearOfBirthday;
 
     public Person() {
