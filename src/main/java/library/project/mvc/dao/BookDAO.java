@@ -2,62 +2,83 @@ package library.project.mvc.dao;
 
 import library.project.mvc.models.Book;
 import library.project.mvc.models.Person;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 
 @Component
 public class BookDAO {
-    private final JdbcTemplate jdbcTemplate;
+    private final SessionFactory sessionFactory;
 
     @Autowired
-    public BookDAO (JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate=jdbcTemplate;
+    public BookDAO (SessionFactory sessionFactory) {
+        this.sessionFactory=sessionFactory;
     }
 
+    @Transactional(readOnly = true)
     public List<Book> showAll() {
-        return jdbcTemplate.query("SELECT * FROM Book", new BookMapper());
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("SELECT b FROM Book b", Book.class).getResultList();
     }
 
+    @Transactional
     public Book showBook(int id) {
-        return jdbcTemplate.query("SELECT * FROM Book WHERE book_id=?",
-                new Object[]{id}, new BookMapper()).stream().findAny().orElse(null);
-
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(Book.class, id);
     }
 
+    @Transactional
     public void save(Book book) {
-        jdbcTemplate.update("INSERT INTO Book (book_name, author, year_of_production) VALUES (?, ?, ?)",
-                book.getName(), book.getAuthor(), book.getYearOfProduction());
+        Session session = sessionFactory.getCurrentSession();
+        session.save(book);
     }
 
-    public void updateBook(int id, Book book) {
-        jdbcTemplate.update("UPDATE Book SET book_name=?, author=?, year_of_production=? WHERE book_id=?",
-                book.getName(), book.getAuthor(), book.getYearOfProduction(), id);
+    @Transactional
+    public void updateBook(int id, Book updatedBook) {
+        Session session = sessionFactory.getCurrentSession();
+        Book bookToUpdate = session.get(Book.class, id);
+        bookToUpdate.setName(updatedBook.getName());
+        bookToUpdate.setAuthor(updatedBook.getAuthor());
+        bookToUpdate.setYearOfProduction(updatedBook.getYearOfProduction());
     }
 
+    @Transactional
     public void delete(int id) {
-        jdbcTemplate.update("DELETE FROM Book WHERE book_id=?", id);
+        Session session = sessionFactory.getCurrentSession();
+        Book book = session.get(Book.class, id);
+        session.delete(book);
+        book.setOwner(null);
     }
 
+    @Transactional
     public void addOwner(int book_id,int person_id) {
-        jdbcTemplate.update("UPDATE Book SET person_id=? WHERE book_id=?",
-                person_id, book_id);
+        Session session = sessionFactory.getCurrentSession();
+        Book book = session.get(Book.class, book_id);
+        Person person = session.get(Person.class, person_id);
+        book.setOwner(session.get(Person.class, person_id));
+        session.get(Person.class, person_id).getBooks().add(book);
     }
 
+    @Transactional
     public boolean isFree(int book_id) {
-        return showBook(book_id).getPerson_id() == 0;
+        return showBook(book_id).getOwner() == null;
     }
 
+    @Transactional
     public Person showOwner(int book_id) {
-        return jdbcTemplate.query("SELECT * FROM Person WHERE id=(SELECT person_id FROM Book WHERE book_id=?)",
-                new Object[]{book_id}, new PersonMapper()).stream().findAny().orElse(null);
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(Book.class, book_id).getOwner();
     }
 
+    @Transactional
     public void getBookFree(int book_id) {
-        jdbcTemplate.update("UPDATE Book SET person_id=null WHERE book_id=?",
-               book_id);
+        Session session = sessionFactory.getCurrentSession();
+        session.get(Book.class, book_id).setOwner(null);
     }
 }

@@ -3,20 +3,39 @@ package library.project.mvc.models;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "Person")
 public class Person {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @NotEmpty(message = "Поле имени не должно быть пустым")
     @Size(min = 2, max = 50, message = "Поле имени должно быть длинной больше 1 и меньше 51 символов")
+    @Column(name = "name")
     private String name;
+
     @NotEmpty(message = "Поле фамилии не должно быть пустым")
     @Size(min = 2, max = 50, message = "Поле фамилии должно быть длинной больше 1 и меньше 51 символов")
+    @Column(name = "surname")
     private String surname;
+
     @NotEmpty(message = "Поле отчества не должно быть пустым")
     @Size(min = 2, max = 50, message = "Поле отчества должно быть длинной больше 1 и меньше 51 символов")
+    @Column(name = "patronymic")
     private String patronymic;
+    @Column(name = "year")
     private int yearOfBirthday;
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    private List<Book> books;
 
     public Person() {
     }
@@ -68,6 +87,26 @@ public class Person {
     public void setYearOfBirthday(int yearOfBirthday) {
         this.yearOfBirthday = yearOfBirthday;
     }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    public void addBook(Book book) {
+        if (this.books == null) {
+            this.books = new ArrayList<>();
+        }
+        this.books.add(book);
+        book.setOwner(this);
+    }
+
+
+
+
 
     public String getFullName() {
         return surname + " " + name + " " + patronymic;
