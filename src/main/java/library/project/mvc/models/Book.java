@@ -79,4 +79,8 @@ public class Book {
     public void setYearOfProduction(int yearOfProduction) {
         this.yearOfProduction = yearOfProduction;
     }
+
+    public boolean isFree() {
+        return this.getOwner() == null;
+    }
 }

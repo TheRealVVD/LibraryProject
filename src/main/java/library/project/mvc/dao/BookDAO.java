@@ -66,11 +66,6 @@ public class BookDAO {
     }
 
     @Transactional
-    public boolean isFree(int book_id) {
-        return showBook(book_id).getOwner() == null;
-    }
-
-    @Transactional
     public Person showOwner(int book_id) {
         Session session = sessionFactory.getCurrentSession();
         return session.get(Book.class, book_id).getOwner();
