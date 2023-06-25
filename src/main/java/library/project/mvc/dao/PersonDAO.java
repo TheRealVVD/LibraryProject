@@ -56,14 +56,4 @@ public class PersonDAO {
         Person person = session.get(Person.class, id);
         session.delete(person);
     }
-
-    @Transactional
-    public List<Book> booksForPerson(int person_id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(Person.class, person_id).getBooks();
-    }
-
-    public boolean hasABook(List list) {
-        return list.size() > 0;
-    }
 }
