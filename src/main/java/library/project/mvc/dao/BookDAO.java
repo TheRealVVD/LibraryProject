@@ -61,14 +61,8 @@ public class BookDAO {
         Session session = sessionFactory.getCurrentSession();
         Book book = session.get(Book.class, book_id);
         Person person = session.get(Person.class, person_id);
-        book.setOwner(session.get(Person.class, person_id));
-        session.get(Person.class, person_id).getBooks().add(book);
-    }
-
-    @Transactional
-    public Person showOwner(int book_id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(Book.class, book_id).getOwner();
+        book.setOwner(person);
+        person.getBooks().add(book);
     }
 
     @Transactional

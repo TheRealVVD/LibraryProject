@@ -26,7 +26,7 @@
                 ">
     </form>
     <form th:method="POST" th:action="@{/books/{id}/get_free(id=${book.getBook_id()})}" th:object="${book}" th:unless="${book.isFree()}">
-        <p th:text="'Книга сейчас у: ' + ${ownerPerson.getFullName()}"> value </p>
+        <p th:text="'Книга сейчас у: ' + ${book.getOwner().getFullName()}"> value </p>
         <input type="submit" value="Освободить книгу"
                style="
                 margin-top: 10px;

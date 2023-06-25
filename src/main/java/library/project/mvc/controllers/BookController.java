@@ -36,7 +36,6 @@ public class BookController {
                            @ModelAttribute("person") Person person) {
         model.addAttribute("book", bookDAO.showBook(id));
         model.addAttribute("people", personDAO.showAll());
-        model.addAttribute("ownerPerson", bookDAO.showOwner(id));
         return "books/showBook";
     }
 
