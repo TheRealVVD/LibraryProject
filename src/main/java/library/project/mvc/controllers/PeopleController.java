@@ -16,12 +16,10 @@ import javax.validation.Valid;
 public class PeopleController {
 
     private final PersonDAO personDAO;
-    private final BookDAO bookDAO;
 
     @Autowired
-    public PeopleController(PersonDAO personDAO, BookDAO bookDAO) {
+    public PeopleController(PersonDAO personDAO) {
         this.personDAO = personDAO;
-        this.bookDAO = bookDAO;
     }
 
     @GetMapping
