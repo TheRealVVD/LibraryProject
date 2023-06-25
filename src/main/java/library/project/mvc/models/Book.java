@@ -2,26 +2,39 @@ package library.project.mvc.models;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+@Entity
+@Table(name = "Book")
 public class Book {
+    @Id
+    @Column(name = "book_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int book_id;
-    private int person_id;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person owner;
+
     @NotEmpty(message = "Поле названия книги не должно быть пустым")
     @Size(min = 2, max = 50, message = "Поле названия книги должно быть длинной больше 1 и меньше 51 символов")
+    @Column(name = "book_name")
     private String name;
     @NotEmpty(message = "Поле имени автора не должно быть пустым")
     @Size(min = 2, max = 50, message = "Поле имени автора должно быть длинной больше 1 и меньше 51 символов")
+    @Column(name = "author")
     private String author;
 
+    @Column(name = "year_of_production")
     private int yearOfProduction;
 
     public Book() {
     }
 
-    public Book(int book_id, int person_id, String name, String author, int yearOfProduction) {
+    public Book(int book_id, Person owner, String name, String author, int yearOfProduction) {
         this.book_id = book_id;
-        this.person_id = person_id;
+        this.owner = owner;
         this.name = name;
         this.author = author;
         this.yearOfProduction = yearOfProduction;
@@ -35,12 +48,12 @@ public class Book {
         this.book_id = book_id;
     }
 
-    public int getPerson_id() {
-        return person_id;
+    public Person getOwner() {
+        return owner;
     }
 
-    public void setPerson_id(int person_id) {
-        this.person_id = person_id;
+    public void setOwner(Person owner) {
+        this.owner = owner;
     }
 
     public String getName() {
@@ -65,5 +78,9 @@ public class Book {
 
     public void setYearOfProduction(int yearOfProduction) {
         this.yearOfProduction = yearOfProduction;
+    }
+
+    public boolean isFree() {
+        return this.getOwner() == null;
     }
 }

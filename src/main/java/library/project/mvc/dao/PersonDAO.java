@@ -2,54 +2,58 @@ package library.project.mvc.dao;
 
 import library.project.mvc.models.Book;
 import library.project.mvc.models.Person;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Component
 public class PersonDAO {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final BookDAO bookDAO;
+    private final SessionFactory sessionFactory;
 
     @Autowired
-    public PersonDAO (JdbcTemplate jdbcTemplate, BookDAO bookDAO) {
-        this.jdbcTemplate=jdbcTemplate;
-        this.bookDAO=bookDAO;
+    public PersonDAO (SessionFactory sessionFactory) {
+        this.sessionFactory=sessionFactory;
     }
 
+    @Transactional(readOnly = true)
     public List<Person> showAll() {
-        return jdbcTemplate.query("SELECT * FROM Person", new PersonMapper());
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("SELECT p FROM Person p", Person.class).getResultList();
     }
 
+    @Transactional
     public Person showPerson(int id) {
-        return jdbcTemplate.query("SELECT * FROM Person WHERE id=?",
-                new Object[]{id}, new PersonMapper()).stream().findAny().orElse(null);
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(Person.class, id);
     }
 
+    @Transactional
     public void save(Person person) {
-        jdbcTemplate.update("INSERT INTO Person (name, surname, patronymic, year) VALUES (?, ?, ?, ?)",
-                person.getName(), person.getSurname(), person.getPatronymic(), person.getYearOfBirthday());
+        Session session = sessionFactory.getCurrentSession();
+        session.save(person);
     }
 
+    @Transactional
     public void updatePerson(int id, Person updatedPerson) {
-        jdbcTemplate.update("UPDATE Person SET name=?, surname=?, patronymic=?, year=? WHERE id=?",
-                updatedPerson.getName(), updatedPerson.getSurname(), updatedPerson.getPatronymic(), updatedPerson.getYearOfBirthday(), id);
+        Session session = sessionFactory.getCurrentSession();
+        Person personToUpdate = session.get(Person.class, id);
+        personToUpdate.setName(updatedPerson.getName());
+        personToUpdate.setSurname(updatedPerson.getSurname());
+        personToUpdate.setPatronymic(updatedPerson.getPatronymic());
+        personToUpdate.setYearOfBirthday(updatedPerson.getYearOfBirthday());
     }
 
+    @Transactional
     public void delete(int id) {
-        jdbcTemplate.update("DELETE FROM Person WHERE id=?", id);
-    }
-
-    public List<Book> booksForPerson(int person_id) {
-        return jdbcTemplate.query("SELECT * FROM Book WHERE person_id=?",
-                new Object[]{person_id}, new BookMapper());
-    }
-
-    public boolean hasABook(List list) {
-        return list.size() > 0;
+        Session session = sessionFactory.getCurrentSession();
+        Person person = session.get(Person.class, id);
+        session.delete(person);
     }
 }

@@ -9,7 +9,7 @@
     <p th:text="${person.getSurname()} + ' ' + ${person.getName()} + ' ' + ${person.getPatronymic()} + ', ' + ${person.getYearOfBirthday()}"> VALUE </p>
 <!--  Оба варианта строки выше - рабочие -->
 
-    <form th:method="GET" th:action="@{/books}" th:unless="${hasABook}">
+    <form th:method="GET" th:action="@{/books}" th:unless="${person.hasABook()}">
     <p> Человек пока не взял ни одной книги </p>
     <input type="submit" value="Взять книгу"
            style="
@@ -22,10 +22,10 @@
                 border-radius: 10px;
                 ">
     </form>
-    <div th:if="${hasABook}">
+    <div th:if="${person.hasABook()}">
         <hr/>
     <p><b>Взял книги: </b></p>
-        <div th:each="book : ${personsBook}">
+        <div th:each="book : ${person.getBooks()}">
             <p th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYearOfProduction()}"></p>
     </div>
     <br/>
