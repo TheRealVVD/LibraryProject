@@ -104,6 +104,10 @@ public class Person {
         book.setOwner(this);
     }
 
+    public boolean hasABook() {
+        return this.books.size() > 0;
+    }
+
 
 
 
