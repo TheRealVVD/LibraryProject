@@ -13,42 +13,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="181cf425-0bbe-498d-8c65-a0a9d925bf28">
-      <console name="projectDBConnection" type="STANDARD" schema="public" session="Main"><![CDATA[create table Person(
-    id serial PRIMARY KEY,
-    name varchar(50) not null,
-    surname varchar(50) not null,
-    patronymic varchar(50) not null,
-    year int check (year > 1900)
-)
-
-create table Book(
-    book_id serial PRIMARY KEY,
-    person_id int references person(id) ON DELETE SET null ,
-    book_name varchar(50) not null,
-    author varchar(50) not null,
-    year_of_production int check (year_of_production > 0)
-)
-
-drop table book
-drop table person
-
-select * from Book
-
-select * from person left join book ON id=person_id where book_id=2
-select * from person left join book ON id=person_id
-
-SELECT person_id FROM Book WHERE book_id=2
-
-SELECT * FROM Person outer join book on id=person_id WHERE book_id=2
-SELECT * FROM Person WHERE id=8
-
-SELECT * FROM Person WHERE id=(SELECT person_id FROM Book WHERE book_id=2)
-
-
-SELECT * FROM Book WHERE person_id=8
-
-select * from person
-select * from book]]></console>
+      <console name="projectDBConnection" type="STANDARD" schema="projectDB" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
