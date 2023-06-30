@@ -4,6 +4,9 @@ import library.project.mvc.models.Book;
 import library.project.mvc.models.Person;
 import library.project.mvc.repositories.BooksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,18 @@ public class BookService {
 
     public List<Book> findAll() {
         return booksRepository.findAll();
+    }
+
+    public List<Book> findAll(String sort, int page, int size) {
+        return booksRepository.findAll(PageRequest.of(page, size, Sort.by("yearOfProduction"))).getContent();
+    }
+
+    public List<Book> findAll(int page, int size) {
+        return booksRepository.findAll(PageRequest.of(page, size)).getContent();
+    }
+
+    public List<Book> findAll(String sort) {
+        return booksRepository.findAll(Sort.by("yearOfProduction"));
     }
 
     public Book findOne(int id) {
