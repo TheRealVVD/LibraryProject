@@ -24,25 +24,31 @@ public class BookService {
         this.booksRepository = booksRepository;
     }
 
-    public List<Book> findAll() {
+    public List<Book> findAll(boolean sort) {
+        if (sort) {
+            return booksRepository.findAll(Sort.by("yearOfProduction"));
+        }
         return booksRepository.findAll();
     }
 
-    public List<Book> findAll(String sort, int page, int size) {
-        return booksRepository.findAll(PageRequest.of(page, size, Sort.by("yearOfProduction"))).getContent();
-    }
-
-    public List<Book> findAll(int page, int size) {
+    public List<Book> findAll(boolean sort, Integer page, Integer size) {
+        if (sort) {
+            return booksRepository.findAll(PageRequest.of(page, size, Sort.by("yearOfProduction"))).getContent();
+        }
         return booksRepository.findAll(PageRequest.of(page, size)).getContent();
     }
 
-    public List<Book> findAll(String sort) {
-        return booksRepository.findAll(Sort.by("yearOfProduction"));
+    public Book findOne(int id) {
+        Optional<Book> book = booksRepository.findById(id);
+        return book.orElse(null);
     }
 
-    public Book findOne(int id) {
-        Optional<Book> Book = booksRepository.findById(id);
-        return Book.orElse(null);
+    public List<Book> findBooksByName(String bookName) {
+        return booksRepository.findByNameStartingWith(bookName);
+    }
+
+    public List<Book> findBooksByAuthor(String authorName) {
+        return booksRepository.findByAuthorStartingWith(authorName);
     }
 
     @Transactional
@@ -52,7 +58,10 @@ public class BookService {
 
     @Transactional
     public void update(int id, Book updatedBook) {
+        Book bookToBeUpdated = booksRepository.findById(id).get();
+
         updatedBook.setBook_id(id);
+        updatedBook.setOwner(bookToBeUpdated.getOwner());//чтобы не терялась связь при обновлении
         booksRepository.save(updatedBook);
     }
 
@@ -70,4 +79,5 @@ public class BookService {
     public void getBookFree(int book_id) {
         booksRepository.findById(book_id).orElse(null).setOwner(null);
     }
+
 }

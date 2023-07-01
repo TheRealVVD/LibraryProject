@@ -28,26 +28,16 @@ public class BookController {
     }
 
     @GetMapping()
-    public String showAllBooks(@RequestParam(value = "p", required = false) String page,
-                               @RequestParam(value = "bpp", required = false) String booksPerPage,
-                               @RequestParam(value = "sby", required = false) String sortByYear,
+    public String showAllBooks(@RequestParam(value = "p", required = false) Integer page,
+                               @RequestParam(value = "bpp", required = false) Integer booksPerPage,
+                               @RequestParam(value = "sby", required = false) boolean sortByYear,
                                Model model)
     {
-        if (page != null && booksPerPage != null && Objects.equals(sortByYear, "true"))
-        {
-            int pageInt = Integer.parseInt(page);
-            int booksPerPageInt = Integer.parseInt(booksPerPage);
-            model.addAttribute("books", bookService.findAll(sortByYear, pageInt, booksPerPageInt));
-        } else if (page != null && booksPerPage != null && Objects.equals(sortByYear, null)) {
-            int pageInt = Integer.parseInt(page);
-            int booksPerPageInt = Integer.parseInt(booksPerPage);
-            model.addAttribute("books", bookService.findAll(pageInt, booksPerPageInt));
-        } else if (Objects.equals(sortByYear, "true")) {
-            model.addAttribute("books", bookService.findAll(sortByYear));
+        if (page != null && booksPerPage != null) {
+            model.addAttribute("books", bookService.findAll(sortByYear, page, booksPerPage));
         } else {
-            model.addAttribute("books", bookService.findAll());
+            model.addAttribute("books", bookService.findAll(sortByYear));
         }
-
 
 
         return "books/showAll";
@@ -113,6 +103,20 @@ public class BookController {
                               @ModelAttribute("person") Person person) {
         bookService.getBookFree(book_id);
         return "redirect:/books/{id}";
+    }
+
+    @GetMapping("/search")
+    public String searchBookPage() {
+        return "books/search";
+    }
+
+    @PostMapping("/search")
+    public String searchBook(@RequestParam(value = "bookName", required = false) String bookName,
+                             Model model) {
+        model.addAttribute("foundedBooks", bookService.findBooksByName(bookName));
+
+
+        return "books/search";
     }
 
 }

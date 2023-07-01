@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Book Page</title>
+</head>
+<body>
+  <form th:method="POST" th:action="@{/books/search}">
+    <label for="name">Введите поисковой запрос:</label>
+    <input type="text" name="bookName" id="name">
+    <br/>
+    <input type="submit" value="Найти книгу" style="
+                margin-top: 10px;
+                background-color: white;
+                width: 100px;
+                height: 25px;
+                border: none;
+                box-shadow: 0 0 5px rgba(0,0,0,0.5);
+                border-radius: 10px;
+                "/>
+    <hr/>
+  </form>
+
+<div th:if="${foundedBooks}">
+  <p th:text="'Книг не найдено'" th:if="${foundedBooks.isEmpty()}"> value </p>
+  <div th:each="book : ${foundedBooks}">
+    <a th:href="@{/books/{id}(id=${book.getBook_id()})}"
+       th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYearOfProduction()}"> book </a>
+    <p th:text="'Книга свободна'" th:unless="${book.getOwner()}"> value </p>
+    <p th:text="'Книга сейчас у: ' + ${book.getOwner().getFullName()}" th:if="${book.getOwner()}"> value </p>
+    <hr/>
+  </div>
+</div>
+
+
+
+
+
+
+<!--  <p th:text="${foundedBooks.getName()} + ', ' + ${foundedBooks.getAuthor()} + ', ' + ${foundedBooks.getYearOfProduction()}"> value </p>-->
+<!--  <br/>-->
+<!--  <p th:text="${foundedBooks.getOwner().getFullName()}"> value </p>-->
+
+</body>
+</html>

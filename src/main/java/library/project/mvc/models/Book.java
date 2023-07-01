@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Book")
@@ -78,9 +79,5 @@ public class Book {
 
     public void setYearOfProduction(int yearOfProduction) {
         this.yearOfProduction = yearOfProduction;
-    }
-
-    public boolean isFree() {
-        return this.getOwner() == null;
     }
 }
