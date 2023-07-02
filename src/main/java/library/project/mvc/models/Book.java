@@ -3,6 +3,7 @@ package library.project.mvc.models;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -22,13 +23,18 @@ public class Book {
     @Size(min = 2, max = 50, message = "Поле названия книги должно быть длинной больше 1 и меньше 51 символов")
     @Column(name = "book_name")
     private String name;
+
     @NotEmpty(message = "Поле имени автора не должно быть пустым")
     @Size(min = 2, max = 50, message = "Поле имени автора должно быть длинной больше 1 и меньше 51 символов")
     @Column(name = "author")
     private String author;
 
+    @Min(value = 1500, message = "Год должен быть больше 1500")
     @Column(name = "year_of_production")
     private int yearOfProduction;
+
+
+
 
     public Book() {
     }
