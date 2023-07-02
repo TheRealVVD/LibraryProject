@@ -101,7 +101,7 @@ public class BookController {
     @PostMapping("/{id}/get_free")
     public String getBookFree(@PathVariable("id") int book_id,
                               @ModelAttribute("person") Person person) {
-        bookService.getBookFree(book_id);
+        bookService.setBookFree(book_id);
         return "redirect:/books/{id}";
     }
 

@@ -40,8 +40,7 @@ public class Person {
     public Person() {
     }
 
-    public Person(int id, String name, String surname, String patronymic, int yearOfBirthday) {
-        this.id = id;
+    public Person(String name, String surname, String patronymic, int yearOfBirthday) {
         this.name = name;
         this.surname = surname;
         this.patronymic = patronymic;
@@ -107,10 +106,6 @@ public class Person {
     public boolean hasABook() {
         return this.books.size() > 0;
     }
-
-
-
-
 
     public String getFullName() {
         return surname + " " + name + " " + patronymic;

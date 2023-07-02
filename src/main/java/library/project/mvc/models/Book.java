@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -33,15 +34,17 @@ public class Book {
     @Column(name = "year_of_production")
     private int yearOfProduction;
 
+    @Column(name = "takenAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date takenAt;
 
-
+    @Transient
+    private boolean expired;
 
     public Book() {
     }
 
-    public Book(int book_id, Person owner, String name, String author, int yearOfProduction) {
-        this.book_id = book_id;
-        this.owner = owner;
+    public Book(String name, String author, int yearOfProduction) {
         this.name = name;
         this.author = author;
         this.yearOfProduction = yearOfProduction;
@@ -85,5 +88,21 @@ public class Book {
 
     public void setYearOfProduction(int yearOfProduction) {
         this.yearOfProduction = yearOfProduction;
+    }
+
+    public Date getTakenAt() {
+        return takenAt;
+    }
+
+    public void setTakenAt(Date takenAt) {
+        this.takenAt = takenAt;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }
